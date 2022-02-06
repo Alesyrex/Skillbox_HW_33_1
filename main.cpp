@@ -28,11 +28,11 @@ void findInvalidArgument(std::string _vendor, int _amount)
         throw std::invalid_argument("amount");
 }
 
-void addBase(std::string _vendor, int _amount, std::map<std::string,int>* base)
+void addBase(std::string _vendor, int _amount, std::map<std::string,int>& base)
 {
     findInvalidArgument(_vendor, _amount);
     bool find = false;
-    for(auto it = base->begin();it != base->end();++it)
+    for(auto it = base.begin();it != base.end();++it)
     {
         if(it->first == _vendor)
         {
@@ -41,21 +41,21 @@ void addBase(std::string _vendor, int _amount, std::map<std::string,int>* base)
         }
     }
     if (!find)
-        base->insert(std::pair<std::string,int>(_vendor,_amount));
+        base.insert(std::pair<std::string,int>(_vendor,_amount));
 }
 
-void addOrRemove (std::string _vendor, int _amount, std::map<std::string,int>* input, std::map<std::string,int>* output)
+void addOrRemove (std::string _vendor, int _amount, std::map<std::string,int>& input, std::map<std::string,int>& output)
 {
     findInvalidArgument(_vendor, _amount);
-    auto it = output->begin();
-    for(;it != output->end();++it)
+    auto it = output.begin();
+    for(;it != output.end();++it)
     {
         if(it->first == _vendor)
         {
             if(it->second >= _amount)
             {
-                auto itShop = input->begin();
-                for (;itShop != input->end();++itShop)
+                auto itShop = input.begin();
+                for (;itShop != input.end();++itShop)
                 {
                     if(itShop->first == _vendor)
                     {
@@ -64,9 +64,9 @@ void addOrRemove (std::string _vendor, int _amount, std::map<std::string,int>* i
                         break;
                     }
                 }
-                if(itShop == input->end())
+                if(itShop == input.end())
                 {
-                    input->insert(std::pair<std::string,int>(it->first,_amount));
+                    input.insert(std::pair<std::string,int>(it->first,_amount));
                     it->second -= _amount;
                 }
                 break;
@@ -77,11 +77,11 @@ void addOrRemove (std::string _vendor, int _amount, std::map<std::string,int>* i
             }
         }
     }
-    if(it == output->end())
+    if(it == output.end())
     {
         throw InvalidVendorCodeException();
     }
-    if (it->second == 0) output->erase(it);
+    if (it->second == 0) output.erase(it);
 }
 
 int main() {
@@ -89,8 +89,8 @@ int main() {
     std::string vendor;
     int amount = 0;
     std::string operation;
-    auto* base = new std::map<std::string,int>();
-    auto* shopCart = new std::map<std::string,int>();
+    std::map<std::string,int> base;
+    std::map<std::string,int> shopCart;
 
     std::cout << "Populate the store database (vendor code and amount, enter 'exit' to start shopping):" << std::endl;
     while (vendor != "exit")
