@@ -169,8 +169,5 @@ int main() {
         }
     }
 
-    delete base;
-    delete shopCart;
-
     return 0;
 }
